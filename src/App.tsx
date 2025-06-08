@@ -14,13 +14,30 @@ const AppContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: white;
-  padding: 1.8rem .8rem;
+  padding: 2rem 1.4rem;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   text-align: center;
-  min-width: 700px;
+  min-width: 320px;
+  max-width: 98vw;
+  width: 100%;
   position: relative;
   z-index: 1;
+  margin: 0 auto;
+  flex-direction: row;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    padding: 1.2rem 0.5rem;
+    min-width: 0;
+    max-width: 100vw;
+  }
+
+  @media (max-width: 600px) {
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0.5rem 0.1rem;
+  }
 `;
 
 const MainContent = styled.div`
@@ -29,6 +46,8 @@ const MainContent = styled.div`
   align-items: center;
   flex: 1;
   z-index: 2;
+  width: 100%;
+  min-width: 0;
 `;    
 
 function App() {

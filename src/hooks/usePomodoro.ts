@@ -8,6 +8,12 @@ import resetSound from '../assets/sounds/reset.mp3';
 
 export type PomodoroMode = 'work' | 'break';
 
+const openHowl = new Howl({ src: [timerOpenSound] });
+const closeHowl = new Howl({ src: [timerCloseSound] });
+const startHowl = new Howl({ src: [startSound] });
+const pauseHowl = new Howl({ src: [pauseSound] });
+const resetHowl = new Howl({ src: [resetSound] });
+
 export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 60) {
   const [showTimer, setShowTimer] = useState(false);
   const [mode, setMode] = useState<PomodoroMode>('work');
@@ -17,12 +23,6 @@ export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 
 
   const totalDuration = mode === 'work' ? workDuration : breakDuration;
   const progress = 1 - seconds / totalDuration;
-
-  const openHowl = new Howl({ src: [timerOpenSound] });
-  const closeHowl = new Howl({ src: [timerCloseSound] });
-  const startHowl = new Howl({ src: [startSound] });
-  const pauseHowl = new Howl({ src: [pauseSound] });
-  const resetHowl = new Howl({ src: [resetSound] });
 
   useEffect(() => {
     if (!running) return;
