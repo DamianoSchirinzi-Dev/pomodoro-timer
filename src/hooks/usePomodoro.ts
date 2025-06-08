@@ -1,8 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
+import { Howl } from 'howler';
+import timerOpenSound from '../assets/sounds/gong1.mp3';
+import timerCloseSound from '../assets/sounds/gong2.mp3';
+import startSound from '../assets/sounds/start.mp3';
+import pauseSound from '../assets/sounds/pause.mp3';
+import resetSound from '../assets/sounds/reset.mp3';
 
 export type PomodoroMode = 'work' | 'break';
 
-export default function usePomodoro(workDuration = .15 * 60, breakDuration = .1 * 60) {
+export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 60) {
+  const [showTimer, setShowTimer] = useState(false);
   const [mode, setMode] = useState<PomodoroMode>('work');
   const [seconds, setSeconds] = useState(workDuration);
   const [running, setRunning] = useState(false);
@@ -10,6 +17,12 @@ export default function usePomodoro(workDuration = .15 * 60, breakDuration = .1 
 
   const totalDuration = mode === 'work' ? workDuration : breakDuration;
   const progress = 1 - seconds / totalDuration;
+
+  const openHowl = new Howl({ src: [timerOpenSound] });
+  const closeHowl = new Howl({ src: [timerCloseSound] });
+  const startHowl = new Howl({ src: [startSound] });
+  const pauseHowl = new Howl({ src: [pauseSound] });
+  const resetHowl = new Howl({ src: [resetSound] });
 
   useEffect(() => {
     if (!running) return;
@@ -29,17 +42,42 @@ export default function usePomodoro(workDuration = .15 * 60, breakDuration = .1 
     }
   }, [seconds, mode, workDuration, breakDuration]);
 
+  const openTimer = () => {
+    openHowl.play();
+    setShowTimer(true); 
+  }
+
+  const start = () => {
+    startHowl.play();   
+    setRunning(true);
+  }
+
+  const pause = () => {
+    pauseHowl.play();
+    setRunning(false);
+  };
+
   const reset = () => {
+    resetHowl.play();
     setRunning(false);
     setSeconds(mode === 'work' ? workDuration : breakDuration);
   };
 
+  const closeTimer = () => {
+    closeHowl.play();
+    setShowTimer(false);
+    reset();
+  };
+
   return {
+    showTimer,
     mode,
     seconds,
     running,
-    start: () => setRunning(true),
-    pause: () => setRunning(false),
+    start,
+    pause,
+    openTimer,
+    closeTimer,
     reset,
     progress,
   };

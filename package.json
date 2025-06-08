@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "framer-motion": "^12.16.0",
+    "howler": "^2.2.4",
+    "lottie-react": "^2.4.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "styled-components": "^6.1.18"

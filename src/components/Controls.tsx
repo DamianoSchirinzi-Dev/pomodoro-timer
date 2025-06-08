@@ -13,6 +13,7 @@ const Button = styled(motion.button)`
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   transition: all 0.3s ease-in-out;
   letter-spacing: 0.5px;
+  min-width: 110px;
 
   &:hover {
     box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
@@ -24,7 +25,6 @@ const Button = styled(motion.button)`
     box-shadow: 0 3px 10px rgba(37, 99, 235, 0.6);
   }
 `;
-
 
 interface ControlsProps {
   running: boolean;
