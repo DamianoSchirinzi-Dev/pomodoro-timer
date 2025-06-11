@@ -8,6 +8,8 @@ import ProgressBar from './components/ProgressBar';
 import TimerLabel from './components/TimerLabel';
 import BackgroundCharacter from './components/BackgroundCharacter';
 import ReturnButton from './components/ReturnButton';
+import { useState } from 'react';
+import TimerConfig from './components/TimerConfig';
 
 const AppContainer = styled.div`
   display: flex;
@@ -34,9 +36,7 @@ const AppContainer = styled.div`
   }
 
   @media (max-width: 600px) {
-    border-radius: 0;
-    box-shadow: none;
-    padding: 0.5rem 0.1rem;
+    padding: .8rem 0.3rem;
   }
 `;
 
@@ -51,20 +51,27 @@ const MainContent = styled.div`
 `;    
 
 function App() {
-  const { showTimer, mode, seconds, running, progress, start, pause, openTimer, closeTimer, reset,  } = usePomodoro();
+  // Local state for settings
+  const [workInput, setWorkInput] = useState(25);
+  const [breakInput, setBreakInput] = useState(5);
+  const [customWork, setCustomWork] = useState(25 * 60);
+  const [customBreak, setCustomBreak] = useState(5 * 60);
+
+  const { showSettings, showTimer, mode, seconds, running, progress, 
+    start, pause, openTimer, closeTimer, openSettings, closeSettings, reset } = usePomodoro(customWork, customBreak);
 
   return (
     <>
       <GlobalStyle />
       <AnimatePresence mode="wait">
-        {!showTimer && (
+        {!showSettings && (
           <motion.button
             key="start-button"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 2, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            onClick={() => openTimer()}
+            onClick={() => openSettings()}
             style={{
               width: 120,
               height: 120,
@@ -82,6 +89,35 @@ function App() {
             Focus
           </motion.button>
         )}
+
+        {showSettings && !showTimer && (
+          <motion.div
+            key="settings-ui"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <AppContainer>
+              <MainContent>
+                <TimerConfig 
+                  workInput={workInput} 
+                  setWorkInput={setWorkInput} 
+                  breakInput={breakInput} 
+                  setBreakInput={setBreakInput}
+                  setCustomWork={(val) => setCustomWork(val)}
+                  setCustomBreak={(val) => setCustomBreak(val)}
+                  openTimer={() => {
+                    setCustomWork(workInput * 60);
+                    setCustomBreak(breakInput * 60);
+                    setTimeout(() => openTimer(), 0); // ensure state is updated before opening timer
+                  }}
+                  closeSettings={closeSettings}
+                />
+              </MainContent>
+            </AppContainer>
+          </motion.div>
+        )} 
 
         {showTimer && (
           <motion.div

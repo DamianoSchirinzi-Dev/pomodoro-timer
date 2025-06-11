@@ -16,6 +16,7 @@ const resetHowl = new Howl({ src: [resetSound] });
 
 export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 60) {
   const [showTimer, setShowTimer] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [mode, setMode] = useState<PomodoroMode>('work');
   const [seconds, setSeconds] = useState(workDuration);
   const [running, setRunning] = useState(false);
@@ -42,6 +43,16 @@ export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 
     }
   }, [seconds, mode, workDuration, breakDuration]);
 
+  // Reset seconds if workDuration or breakDuration changes
+  useEffect(() => {
+    setSeconds(mode === 'work' ? workDuration : breakDuration);
+  }, [workDuration, breakDuration, mode]);
+
+  const openSettings = () => {
+    openHowl.play();  
+    setShowSettings(true);
+  }
+
   const openTimer = () => {
     openHowl.play();
     setShowTimer(true); 
@@ -63,14 +74,22 @@ export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 
     setSeconds(mode === 'work' ? workDuration : breakDuration);
   };
 
+  const closeSettings = () => {
+    closeHowl.play();  
+    setShowSettings(false);
+  }
+
   const closeTimer = () => {
     closeHowl.play();
     setShowTimer(false);
     reset();
   };
 
+
+
   return {
     showTimer,
+    showSettings,
     mode,
     seconds,
     running,
@@ -78,6 +97,8 @@ export default function usePomodoro(workDuration = 15 * 60, breakDuration = 5 * 
     pause,
     openTimer,
     closeTimer,
+    openSettings,
+    closeSettings,
     reset,
     progress,
   };
